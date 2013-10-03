@@ -1,0 +1,11 @@
+<!--<input type="text" ng-model="result" typeahead-min-length="3" typeahead="company.name for company in companies ">
+<!--searchCompanies($viewValue)-->
+
+
+
+<div class="input-group">
+    <input ng-model="selectedCompany.id" ui-select2="options" ng-required="true" style="width: 100%;" />
+    <span class="input-group-addon" ng-click="resetCompany()">
+        <i class="icon-remove pull-right"></i>
+    </span>
+</div>

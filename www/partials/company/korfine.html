@@ -1,0 +1,124 @@
+<div id="korfine" bindonce="company">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a bo-href="'#/company/' + company.id" bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></a></li>
+            <li class="active">Korfine</li>
+        </ol>
+    </nav>
+    <div class="row well">
+        <div class="col-xs-8">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Extranet Username</label>
+                    <div class="col-xs-8">
+                        <p class="form-control-static" bo-text="company.extranetUsername"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Extranet Password</label>
+                    <div class="col-xs-8">
+                        <p class="form-control-static" bo-text="company.extranetPassword"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Extranet Login</label>
+                    <div class="col-xs-8">
+                        <p class="form-control-static"><a class="btn btn-primary" ng-href="{{company.extranetUrl}}" target="_blank">Login</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-4">
+            <span class="btn btn-primary" ng-click="activateKorfine()" ng-hide="company.isKorfine">Activate Korfine</span>
+            <span class="btn btn-primary disabled" ng-show="company.isKorfine">Korfine Activated</span>
+            <div id="result" class="well well-sm {{resultClass}}" ng-show="showResult">
+                <ul ng-repeat="result in results">
+                    <li bo-text="result.description"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row well">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Production</td>
+                    <td>Stop</td>
+                    <td>Abolishment</td>
+                    <td>Running</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Quantity</td>
+                    <td bo-text="company.productionQuantity"></td>
+                    <td bo-text="company.stopQuantity"></td>
+                    <td bo-text="company.abolishmentQuantity"></td>
+                    <td bo-text="company.runningQuantity"></td>
+                </tr>
+                <tr>
+                    <td>Volume</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td bo-text="company.volume |euro"></td>
+                </tr>
+                <tr>
+                    <td>Average</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td bo-text="company.average |euro"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="row well">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Current Year</td>
+                    <td>Last Year</td>
+                    <td>%</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1st quarter</td>
+                    <td bo-text="company.firstQuarterCurrentYear"></td>
+                    <td bo-text="company.firstQuarterLastYear"></td>
+                    <td bo-text="company.firstQuarterPercentage"></td>
+                </tr>
+                <tr>
+                    <td>2nd quarter</td>
+                    <td bo-text="company.secondQuarterCurrentYear"></td>
+                    <td bo-text="company.secondQuarterLastYear"></td>
+                    <td bo-text="company.secondQuarterPercentage"></td>
+                </tr>
+                <tr>
+                    <td>3th quarter</td>
+                    <td bo-text="company.thirdQuarterCurrentYear"</td>
+                    <td bo-text="company.thirdQuarterLastYear"</td>
+                    <td bo-text="company.thirdQuarterPercentage"</td>
+                </tr>
+                <tr>
+                    <td>4th quarter</td>
+                    <td bo-text="company.fourthQuarterCurrentYear"</td>
+                    <td bo-text="company.fourthQuarterLastYear"</td>
+                    <td bo-text="company.fourthQuarterPercentage"</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td bo-text="company.totalCurrentYear"</td>
+                    <td bo-text="company.totalLastYear"</td>
+                    <td bo-text="company.totalPercentage"</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

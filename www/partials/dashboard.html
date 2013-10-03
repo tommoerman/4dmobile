@@ -1,0 +1,85 @@
+<nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+    <ol class="breadcrumb">
+        <li class="active"><i class="icon-dashboard"></i>&nbsp;Dashboard</li>
+        <span class="pull-right">
+            <a href="#/logout">Log out</a>
+        </span>
+    </ol>
+
+</nav>
+<hr />
+<div class="row">
+    <div>
+        <div class="panel panel-default" ng-controller="DashboardCompaniesController">
+            <div class="panel-heading">
+                <i class="icon-gears"></i>
+                <a ng-href="#/companies"><i class="icon-reorder pull-right"></i></a>
+                Companies
+            </div>
+            <div>
+                <div class="panel-heading">
+                    <form ng-submit="search()" name="companyForm" novalidate>
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="search" ng-model="searchValue" autocomplete="off" ng-minlength="3" required />
+                            <span class="input-group-addon" ng-click="search()">
+                                <i class="icon-search pull-right"></i>
+                            </span>
+                            <span class="input-group-addon" ng-click="reset()">
+                                <i class="icon-remove pull-right"></i>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div>
+        <div class="panel panel-default" ng-controller="DashboardHotCompaniesController">
+            <div class="panel-heading">
+                <i class="icon-gears"></i>
+                <i class="icon-chevron-down pull-right" style="color:#428bca;" ng-hide="isOpen" ng-click="toggle()"></i>
+                <i class="icon-chevron-up pull-right" ng-show="isOpen" ng-click="toggle()"></i>
+                Hot Companies
+            </div>
+            <div>
+                <div class="panel-heading" ng-show="isOpen">
+                    <div bindonce ng-repeat="company in companies">
+                    <a bo-href-i="#/company/{{company.id}}" class="list-group-item">
+                        <span><strong bo-html="company.name"></strong></span><span> - </span><span><small bo-html="company.city"></small></span>
+                        <span class="pull-right hidden-xs">
+                            <span class="text-right" bo-show="company.hasKorfine">
+                                <img src="Images/korfine.png" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasKorfina">
+                                <img src="Images/korfina.jpg" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasVitrine">
+                                <img src="Images/vitrine.png" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasSkarabee">
+                                <img src="Images/skarabee.png" style="width: 16px; height: 16px;" /></span>
+                        </span>
+                    </a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div>
+        <div class="panel panel-default" ng-controller="DashboardCalendarController">
+            <div class="panel-heading">
+                <i class="icon-calendar"></i>
+
+                <a ng-href="#/calendar"><i class="icon-reorder pull-right"></i></a>
+                <span class="pull-right" style="margin-right: 15px;" ng-show="calendarLoading">
+                    <img style="display: inline-block" src="images/ajax-loader.gif" />
+                </span>
+                Calendar
+            </div>
+            <div ui-calendar="uiConfig.calendar" config="uiConfig.calendar" calendar="dashboardCalendar" ng-model="eventSources"></div>
+        </div>
+
+        <!--        <div ng-include src="'partials/dashboard/calendar.html'"></div>-->
+    </div>
+</div>

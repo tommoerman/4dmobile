@@ -1,0 +1,39 @@
+<div id="tickets">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top" bindonce="company">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a bo-href="'#/company/' + company.id" bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></a></li>
+            <li class="active"><i class="icon-fire-extinguisher"></i>&nbsp;Tickets</li>
+        </ol>
+    </nav>    
+</div>
+<div class="row well" ng-switch on="tickets.length > 0">
+    <div class="table-responsive" ng-switch-when="true">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <td style="width: 38px;"></td>
+                    <td style="width: 38px;">Resp.</td>
+                    <td style="width: 38px;">Subject</td>
+                    <td>Start</td>                    
+                    <td>Finished</td>                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr bindonce ng-repeat="ticket in tickets">
+                    <td><a bo-href-i="#/company/{{company.id}}/tickets/ticket/{{ticket.id}}"><i class="icon-edit icon-2x" style="color: #428bca; margin-right: 10px;"></a></i></td>
+                    <td bo-text="ticket.responsible"></td>                    
+                    <td bo-text="ticket.question"></td> 
+                    <td bo-html="ticket.startDate + ' ' + ticket.startTime"></td>
+                    <td ng-show="ticket.status=='FINISHED'" bo-html="ticket.endDate + ' ' + ticket.endTime"></td>
+                    <td ng-show="ticket.status!='FINISHED'"><i class="icon-minus" bo-hide="action.finished"></i></td>                   
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-switch-when="false">
+        <div ng-switch-when="false">No results</div>
+    </div>
+</div>
+

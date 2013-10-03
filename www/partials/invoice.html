@@ -1,0 +1,101 @@
+<div>
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a ng-href="#/company/{{company.id}}"><i class="icon-gear"></i>&nbsp;{{company.name}}</a></li>
+            <li><a ng-href="#company/{{company.id}}/invoices"><i class="icon-euro"></i>&nbsp;Invoices</a></li>
+            <li class="active">{{invoice.number}} ({{invoice.originator}})</li>
+        </ol>
+    </nav>
+    <div class="row well">
+        <form class="form-horizontal" role="form" novalidate bindonce="invoice">
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Company</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="company.name"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Originator</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.originator | capitalizeFirst"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Number</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.number"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Description</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.description"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date" class="col-xs-3 control-label">Date</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.date"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date" class="col-xs-3 control-label">Amount</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="'&euro; ' + invoice.amount + ' + &euro; ' + invoice.amountVAT + ' = &euro; ' + invoice.amountVATIncluded"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date" class="col-xs-3 control-label">Paid</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static">
+                        <i class="icon-ok" bo-show="invoice.paid"></i>
+                        <i class="icon-minus" bo-hide="invoice.paid"></i>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group" bo-hide="invoice.paid">
+                <label for="date" class="col-xs-3 control-label">Open amount</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.openAmount | euro"></p>
+                </div>
+            </div>
+            <div class="form-group" bo-show="invoice.paid">
+                <label for="date" class="col-xs-3 control-label">Paid on</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static" bo-text="invoice.datePaid"></p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row well">
+        <div class="row well" ng-switch on="invoice.lines.length > 0">
+    <div class="table-responsive" ng-switch-when="true">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <td>Description</td>
+                    <td>Quantity</td>
+                    <td>Discount</td>
+                    <td>Amount</td>
+                    <td>Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr bindonce ng-repeat="line in invoice.lines">
+                    <td bo-text="line.description"></td>
+                    <td bo-text="line.quantity"></td>
+                    <td bo-text="line.discount | percentage"></td>
+                    <td bo-text="line.amount | euro"></td>
+                    <td bo-text="line.total | euro"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-switch-when="false">
+        <div ng-switch-when="false">No results</div>
+    </div>
+</div>
+    </div>
+</div>

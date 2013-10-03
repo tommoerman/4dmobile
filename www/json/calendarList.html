@@ -1,0 +1,22 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+        {
+			"actions": [
+			
+				<!--#4DLOOP AWebActionsId-->
+					{
+						"id": "<!--#4DVAR AWebActionsId{AWebActionsId}-->",
+						"title": "<!--#4DVAR AWebActionsDescription{AWebActionsId}-->",
+						"start": "<!--#4DVAR AWebActionsDateTimeStart{AWebActionsId}-->",
+						"end": "<!--#4DVAR AWebActionsDateTimeEnd{AWebActionsId}-->",
+						"finished": "<!--#4DVAR AWebActionsFinished{AWebActionsId}-->",
+						"company": "<!--#4DVAR AWebActionsCompany{AWebActionsId}-->"
+					}
+					<!--#4DIF (AWebActionsId<size of array(AWebActionsId)) -->
+						,
+					<!--#4DENDIF -->
+				<!--#4DENDLOOP-->	
+			]
+		}
+}

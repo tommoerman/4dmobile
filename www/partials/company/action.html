@@ -1,0 +1,19 @@
+<div>
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a href="#/company/{{company.id}}"><i class="icon-gear"></i>&nbsp;{{company.name}}</a></li>
+            <li><a ng-href="#company/{{company.id}}/{{previous}}"><span ng-switch on="previous">
+                <i class="icon-globe" ng-switch-when="visits"></i>
+                <i class="icon-envelope" ng-switch-when="actions"></i>
+            </span>
+                {{previous | capitalizeFirst}}
+
+            </a></li>
+            <li class="active" ng-hide="action.id == -1" ng-bind-html="action.description"></li>
+            <li class="active" ng-show="action.id == -1">New</li>
+        </ol>
+    </nav>
+    <div ng-include="'/partials/actionForm.html'" />
+</div>

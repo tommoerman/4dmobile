@@ -1,0 +1,69 @@
+<div id="contacts" bindonce="company">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a class="" href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a class="" href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a class="" bo-href="'#/company/' + company.id" bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></a></li>
+            <li class="active"><i class="icon-user"></i>&nbsp;Contacts</li>
+        </ol>
+    </nav>
+    <form id="contactform" name="form" class="form-horizontal" novalidate>
+        <div class="panel">
+            <div class="row" style="margin-bottom: 15px;">
+                <button class="btn btn-primary pull-right" style="margin-left: 10px;" ng-show="isEditing" ng-click="close()"><i class="icon-remove"></i>&nbsp;Close</button>
+                <button class="btn btn-primary pull-right" ng-show="isEditing" ng-disabled="form.$invalid" ng-click="update()"><i class="icon-save"></i>&nbsp;Update</button>
+                <button class="btn btn-primary pull-right" ng-show="!isEditing" ng-click="new()"><i class="icon-plus"></i>&nbsp;New</button>
+            </div>
+            <div class="row" ng-show="isEditing">
+                <div id="result" class="well well-sm {{resultClass}}" ng-show="showResult">
+                    <button class="btn btn-primary pull-right" ng-click="closeResult()"><i class="icon-remove"></i>Close</button>
+                    <ul ng-repeat="result in results">
+                        <li>{{result.description}}</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">FirstName *</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" placeholder="First Name" ng-model="selectedContact.firstName" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Name *</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" placeholder="Name" ng-model="selectedContact.name" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Telephone</label>
+                    <div class="col-xs-9">
+                        <input type="tel" class="form-control" placeholder="Telephone" name="tel" ng-model="selectedContact.telephone" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Email</label>
+                    <div class="col-xs-9">
+                        <input type="email" class="form-control" placeholder="Email" name="email" ng-model="selectedContact.email" />
+                        <span ng-show="form.email.$dirty && form.email.$invalid">
+                            <span ng-show="form.email.$error.email">This is not a valid email.</span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="list-group" ng-repeat="contact in company.contacts" style="margin-bottom: 0px;">
+            <div class="list-group-item">
+                <a ng-click="edit({{contact.id}})"><i class="icon-edit icon-2x" style="color: #428bca; margin-right: 10px;cursor:pointer;"></i></a>
+                <span ng-bind-html="contact.name"></span>                
+                <span ng-bind-html="contact.firstName"></span>                
+                <a ng-show="contact.email != ''" ng-href="mailto:{{contact.email}}"><i class="icon-envelope icon-2x pull-right"></i></a>
+                <a ng-show="contact.telephone != ''" ng-href="tel:{{contact.telephone}}"><i class="icon-phone icon-2x pull-right"></i></a>
+                <span ng-show="contact.isKeyContactSkarabee" class="pull-right" ><img src="images/keyS.jpg" style="width: 28px; height:28px"/></span>                
+                <span ng-show="contact.isKeyContactVitrine" class="pull-right" ><img  src="images/keyV.jpg" style="width: 28px; height:28px"/></span>
+                <span ng-show="contact.isKeyContactKorfina" class="pull-right" ><img  src="images/keyK.jpg" style="width: 28px; height:28px"/></i></span>
+            </div>
+        </div>
+    </div>
+</div>

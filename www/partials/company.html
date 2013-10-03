@@ -1,0 +1,110 @@
+<div>
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top"  bindonce="company">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li class="active"  bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></li>
+        </ol>
+    </nav>
+    <div class="row well" bindonce="company">
+        <div class="col-sm-10">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" bo-html="company.name"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-sm-3 control-label">Address</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><span bo-text="company.street"></span> - <span bo-text="company.city"></span></p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.telephone != ''">
+                    <label for="inputPassword" class="col-sm-3 control-label">Telephone</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><a bo-href="'tel:' + company.telephone" bo-text="company.telephone"></a></p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.mobile != ''">
+                    <label for="inputPassword" class="col-sm-3 control-label">Mobile</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><a bo-href="'tel:' + company.mobile" bo-text="company.mobile"></a></p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.email != ''">
+                    <label for="inputPassword" class="col-sm-3 control-label">Email</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><a bo-href="'mailto:' + company.email" bo-text="company.email"></a></p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.email != ''">
+                    <label for="inputPassword" class="col-sm-3 control-label">Website</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><a target="_blank" bo-href="company.website | url" bo-text="company.website"></a></p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.hasSkarabee">
+                    <label for="inputPassword" class="col-sm-3 control-label">Skarabee</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static"><span bo-text="company.skarabeeType"></span> - <span bo-text="company.skarabeeVersion"></span> - <span bo-text="company.skarabeeUsers"></span> user(s)</p>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="company.organisation != ''">
+                    <label for="inputPassword" class="col-sm-3 control-label">Org.</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" bo-text="company.organisation"></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-2" bindonce="company">
+            <div class="thumbnail col-xs-3" bo-show="company.hasSkarabee" style="width:30px;height:51px;">
+                <img src="Images/skarabee.png" class="img-responsive" style="display: inline-block;height: 20px;" />
+                <span bo-text="company.contactSkarabee"></span>
+            </div>
+            <div class="thumbnail col-xs-3" bo-show="company.hasVitrine" style="width:30px;height:51px;">
+                <img src="Images/vitrine.png" class="img-responsive" style="display: inline-block;height: 20px;" />
+                <span bo-text="company.contactVitrine"></span>
+            </div>
+            <div class="thumbnail col-xs-3" bo-show="company.hasKorfina" style="width:30px;height:51px;">
+                <img src="Images/korfina.jpg" class="img-responsive" style="display: inline-block;height: 20px;" />
+                <span bo-text="company.contactKorfina"></span>
+            </div>
+            <div class="thumbnail col-xs-3" bo-show="company.hasKorfine" style="width:30px;height:51px;">
+                <img src="Images/korfine.png" class="img-responsive" style="display: inline-block;height: 20px;" />
+                <span bo-text="company.contactKorfina"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row companyButtons" bindonce="company">
+        <a bo-href="'#company/'+ company.id +'/visits'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-globe"></i>&nbsp;Visits</button>
+        </a>
+        <div class="clearfix visible-xs"></div>
+        <a bo-href="'#company/'+ company.id +'/actions'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-envelope"></i>&nbsp;Actions</button>
+        </a>
+        <div class="clearfix visible-xs"></div>
+        <a bo-href="'#company/'+ company.id +'/contacts'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-user"></i>&nbsp;Contacts</button>
+        </a>
+        <div class="clearfix visible-xs"></div>
+        <a bo-href="'#company/'+ company.id +'/invoices'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-euro"></i>&nbsp;Invoices</button>
+        </a>
+       <!-- <div class="clearfix visible-xs"></div>
+        <a bo-href="'#company/'+ company.id +'/tickets'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-fire-extinguisher"></i>&nbsp;Tickets</button>
+        </a>-->
+        <div class="clearfix visible-xs"></div>
+        <a bo-href="'#company/'+ company.id +'/map'">
+            <button type="button" class="btn btn-primary btn-lg"><i class="icon-globe"></i>&nbsp;Map</button>
+        </a>
+        <div class="clearfix visible-xs"></div>
+        <a ng-show="company.hasKorfina" bo-href="'#company/'+ company.id +'/korfine'">
+            <button type="button" class="btn btn-primary btn-lg">Korfinae</button>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",
+    "data" : 
+		{"result": "<!--#4DVAR VWebStatus-->",
+		 "id" : "<!--#4DVAR VWebId-->",
+		 "errors" : [
+		    <!--#4DLOOP AWebErrors-->
+		            {
+		                "description": "<!--#4DVAR AWebErrors{AWebErrors}-->"               
+		            }
+		            <!--#4DIF (AWebErrors<size of array(AWebErrors)) -->
+		                ,
+		            <!--#4DENDIF -->
+		        <!--#4DENDLOOP-->   
+		 ]
+		}
+}

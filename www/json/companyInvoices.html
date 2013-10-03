@@ -1,0 +1,30 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+    {
+        "company": {
+               "id": "<!--#4DVAR VWebCompanyId-->",
+               "name": "<!--#4DVAR VWebCompanyName-->"
+        },
+       "invoices":[
+                   <!--#4DLOOP AWebInvoiceId-->
+                   {                   
+                       "id" : "<!--#4DVAR AWebInvoiceId{AWebInvoiceId}-->",
+                       "number" : "<!--#4DVAR AWebInvoiceNumber{AWebInvoiceId}-->",
+                       "date": "<!--#4DVAR AWebInvoiceDate{AWebInvoiceId}-->",
+                       "description": "<!--#4DVAR AWebInvoiceDescription{AWebInvoiceId}-->",
+                       "company" : "<!--#4DVAR AWebInvoiceCompany{AWebInvoiceId}-->",
+                       "paid" : "<!--#4DVAR AWebInvoicePaid{AWebInvoiceId}-->",
+                       "datePaid" : "<!--#4DVAR AWebInvoiceDatePaid{AWebInvoiceId}-->",
+                       "openAmount": "<!--#4DVAR AWebInvoiceOpenAmount{AWebInvoiceId}-->",
+                       "amount" : "<!--#4DVAR AWebInvoiceAmount{AWebInvoiceId}-->",
+                       "VAT" : "<!--#4DVAR AWebInvoiceAmountVAT{AWebInvoiceId}-->",
+                       "amountVATIncluded" : "<!--#4DVAR AWebInvoiceAmountVATIncluded{AWebInvoiceId}-->"                    
+                   }
+                    <!--#4DIF (AWebInvoiceId<size of array(AWebInvoiceId)) -->                    
+                        ,
+                        <!--#4DENDIF -->
+                    <!--#4DENDLOOP-->   
+                ]
+   }
+}

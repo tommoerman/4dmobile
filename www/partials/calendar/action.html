@@ -1,0 +1,11 @@
+<div>
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/calendar"><i class="icon-calendar"></i>&nbsp;Calendar</a></li>
+            <li class="active" ng-hide="action.id == -1" ng-bind-html="action.description"></li>
+            <li class="active" ng-show="action.id == -1">New</li>
+        </ol>
+    </nav>
+    <div ng-include="'/partials/actionForm.html'" />
+</div>

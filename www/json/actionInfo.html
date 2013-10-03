@@ -1,0 +1,55 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+		{"company": {
+                "id": "<!--#4DVAR VWebCompanyId-->",
+                "name": "<!--#4DVAR VWebCompanyName-->"
+            },
+            "user": {
+                "id": "<!--#4DVAR VWebActionResponsible-->"
+            },
+            "salesProducts": [
+		    
+		        <!--#4DLOOP AWebSalesProductId-->
+		            {
+		                "id": <!--#4DVAR AWebSalesProductId{AWebSalesProductId}-->,
+		                "name": "<!--#4DVAR AWebSalesProductName{AWebSalesProductId}-->",                
+		                "credits": "<!--#4DVAR AWebSalesProductCredits{AWebSalesProductId}-->",
+                        "selected": "<!--#4DVAR AWebSalesProductSelected{AWebSalesProductId}-->"
+		            }
+		            <!--#4DIF (AWebSalesProductId<size of array(AWebSalesProductId)) -->
+		                ,
+		            <!--#4DENDIF -->
+		        <!--#4DENDLOOP-->   
+		    ],                
+        "finishedOptions": [
+                "OPEN","CANCELLED", "FINISHED"
+        ], 
+        "actionTypes": [
+            {
+                "id": "980",
+                "text": "Visit"
+            },
+            {
+                "id": "2539",
+                "text": "Telephone"
+            },
+            {
+                "id": "982",
+                "text": "Meeting"
+            },
+            {
+                "id": "3268",
+                "text": "Administration/Organisation"
+            },
+            {
+                "id": "3269",
+                "text": "Travel Time"
+            },            
+            {
+                "id": "2540",
+                "text": "Internal request"
+            }
+            ]
+		}
+}

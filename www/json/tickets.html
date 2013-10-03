@@ -1,0 +1,29 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+        {   
+            "company": {
+                "id": "<!--#4DVAR VWebCompanyId-->",
+                "name": "<!--#4DVAR VWebCompanyName-->"
+            },
+            "tickets": [
+			
+				<!--#4DLOOP AWebTicketId-->
+					{
+						"id": "<!--#4DVAR AWebTicketId{AWebTicketId}-->",
+						"startDate": "<!--#4DVAR AWebTicketStartDate{AWebTicketId}-->",						
+						"startTime": "<!--#4DVAR AWebTicketStartTime{AWebTicketId}-->",
+						"endDate" : "<!--#4DVAR AWebTicketEndDate{AWebTicketId}-->",                        
+                        "endTime" : "<!--#4DVAR AWebTicketEndTime{AWebTicketId}-->",                        
+                        "responsible" : "<!--#4DVAR AWebTicketResponsible{AWebTicketId}-->",
+                        "question" : "<!--#4DVAR AWebTicketQuestion{AWebTicketId}-->",
+                        "status" : "<!--#4DVAR AWebTicketStatus{AWebTicketId}-->"                        
+
+					}
+					<!--#4DIF (AWebTicketId<size of array(AWebTicketId)) -->
+						,
+					<!--#4DENDIF -->
+				<!--#4DENDLOOP-->	
+			]
+		}
+}

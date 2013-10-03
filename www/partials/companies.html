@@ -1,0 +1,49 @@
+<nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+    <ol class="breadcrumb">
+        <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+        <li class="active"><i class="icon-gears"></i>&nbsp;Companies</li>
+    </ol>   
+</nav>
+
+<div ng-controller="CompaniesController" class="container">
+    <div class="row">
+        <form name="form" ng-submit="search()" novalidate>
+            <div class="input-group pull-right" style="cursor: pointer;" ng-switch on="searchState">
+                <input type="text" class="form-control" placeholder="search" name="searchValue" ng-model="searchValue" ng-minlength="3" autocomplete="off" />
+                <span class="input-group-addon" ng-click="search()"><i class="icon-search"></i></span>
+                <span class="input-group-addon" ng-click="reset()"><i class="icon-remove pull-right"></i></span>
+
+                <span class="input-group-addon" ng-switch-when="name" ng-click="changeState('city')">Name</span>
+                <span class="input-group-addon" ng-switch-when="city" ng-click="changeState('name')">City</span>
+
+            </div>
+            <div ng-show="form.searchValue.$invalid && form.searchValue.$error.minlength">The minimum length must be 3 characters.</div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div style="overflow: auto; margin-top: 10px;" class="panel panel-primary" ng-switch on="companies.length>0">
+            <div class="panel-heading">Companies</div>
+            <div class="panel-body" ng-switch-when="true">
+                <div bindonce ng-repeat="company in companies">
+                    <a bo-href-i="#/company/{{company.id}}" class="list-group-item">
+                        <span><strong bo-html="company.name"></strong></span><span> - </span><span><small bo-html="company.city"></small></span>
+                        <span class="pull-right hidden-xs">
+                            <span class="text-right" bo-show="company.hasKorfine">
+                                <img src="Images/korfine.png" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasKorfina">
+                                <img src="Images/korfina.jpg" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasVitrine">
+                                <img src="Images/vitrine.png" style="width: 16px; height: 16px;" /></span>
+                            <span class="text-right" bo-show="company.hasSkarabee">
+                                <img src="Images/skarabee.png" style="width: 16px; height: 16px;" /></span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body" ng-switch-when="false" ng-show="hasSearched">
+                No companies found.
+            </div>
+        </div>
+    </div>
+</div>

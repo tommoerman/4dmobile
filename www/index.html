@@ -1,0 +1,1068 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<html ng-app="mobileApp">
+<head>
+    <title>4D Mobile</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="Content/bootstrap.css" type="text/css" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="Content/fullCalendar.css" rel="stylesheet">
+    <link rel="stylesheet" href="Content/select2.css" type="text/css" />
+    <link rel="stylesheet" href="Content/style.css" type="text/css" />
+    <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="scripts/angular.min.js"></script>
+    <script type="text/javascript" src="scripts/moment.min.js"></script>
+    <script type="text/javascript" src="scripts/angular-route.min.js"></script>
+    <script type="text/javascript" src="scripts/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="scripts/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="scripts/calendar.js"></script>
+    <script type="text/javascript" src="scripts/angular-ui.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="scripts/select2.min.js"></script>
+    <script type="text/javascript" src="scripts/ui-bootstrap-0.6.0.min.js"></script>
+    <script type="text/javascript" src="scripts/ui-bootstrap-tpls-0.6.0.min.js"></script>
+    <script type="text/javascript" src="scripts/bindonce.js"></script>
+    <script type="text/javascript" src="scripts/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="scripts/angular-google-map.js"></script>
+
+
+
+
+
+
+</head>
+<body>
+
+    <div ng-view class="container animation"></div>
+
+
+
+
+
+    <script type="text/javascript">
+
+        var baseUrl = "http://10.1.5.1:8080"
+
+        var mobileApp = angular.module('mobileApp', ['ngRoute', 'ngSanitize', 'mobileApp.controllers', 'mobileApp.services', 'ui', 'ui.calendar', 'ui.bootstrap', 'pasvaz.bindonce', 'ngCookies', 'google-maps']);
+
+        mobileApp.config(['$routeProvider', '$compileProvider', '$provide', '$httpProvider', function ($routeProvider, $compileProvider, $provide, $httpProvider) {
+            $routeProvider
+                .when('/dashboard', { templateUrl: 'partials/dashboard.html' })
+                .when('/companies', { templateUrl: 'partials/companies.html' })
+                .when('/company/:id', {
+                    controller: 'CompanyController',
+                    templateUrl: 'partials/company.html',
+                    resolve: {
+                        company: function (companyService, $route) {
+                            return companyService.getCompanyInfo($route.current.params.id).then(function (result) {
+                                return result.data.data;
+                            });
+
+                        }
+                    }
+
+                })
+                .when('/company/:id/contacts', {
+                    controller: 'CompanyContactsController',
+                    templateUrl: 'partials/company/contacts.html',
+                    resolve: {
+                        company: function (companyService, $route) {
+                            return companyService.getCompanyContacts($route.current.params.id).then(function (result) {
+                                return result.data.data;
+                            });
+                        }
+                    }
+                })
+                .when('/company/:id/korfine', {
+                    controller: 'CompanyKorfineController',
+                    templateUrl: 'partials/company/korfine.html',
+                    resolve: {
+                        company: function (companyService, $route) {
+                            return companyService.getCompanyKorfine($route.current.params.id).then(function (result) {
+                                return result.data.data;
+                            });
+                        }
+                    }
+
+                })
+                .when('/company/:id/actions', {
+                    controller: 'CompanyActionsController',
+                    templateUrl: 'partials/company/actions.html'
+                })
+                .when('/company/:id/visits', {
+                    controller: 'CompanyVisitsController',
+                    templateUrl: 'partials/company/visits.html'
+                })
+                .when('/company/:id/invoices', {
+                    controller: 'CompanyInvoicesController',
+                    templateUrl: 'partials/company/invoices.html'
+                })
+                .when('/company/:companyId/:previous/action/:id/', {
+                    controller: 'CompanyActionController',
+                    templateUrl: 'partials/company/action.html',
+                    resolve: {
+                        actionData: function (actionService, companyService, $route) {
+                            if ($route.current.params.id == -1) {
+                                return actionService.getActionInfo($route.current.params.companyId).then(function (result) {
+                                    return {
+                                        company: result.data.data.company,
+                                        availableSalesProducts: result.data.data.salesProducts,
+                                        finishedOptions: result.data.data.finishedOptions,
+                                        action: {
+                                            date: moment().format('YYYY-MM-DD'),
+                                            timeStart: moment().format('HH:mm'),
+                                            timeEnd: moment().add('minutes', 60).format('HH:mm'),
+                                            id: -1,
+                                            typeId: 980,
+                                            type: 'Visit',
+                                            responsible: result.data.data.user.id,
+                                            salesProducts: {},
+                                            finished: "OPEN"
+                                        },
+                                        availableActionTypes: result.data.data.actionTypes
+                                    }
+                                })
+                            } else {
+                                return actionService.getAction($route.current.params.id).then(function (result) {
+                                   return {
+                                        company: result.data.data.company,
+                                        availableSalesProducts: result.data.data.action.salesProducts,
+                                        action: result.data.data.action,
+                                        finishedOptions: result.data.data.finishedOptions,
+                                        availableActionTypes: result.data.data.actionTypes
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+                .when('/company/:companyId/invoices/invoice/:id', {
+                    controller: 'InvoiceController',
+                    templateUrl: 'partials/invoice.html',
+                    resolve: {
+                        invoiceData: function (companyService, $route) {
+                            return companyService.getCompanyInvoice($route.current.params.id).then(function (result) {
+                                return result.data.data;
+                            })
+                        }
+                    }
+                })
+                .when('/company/:id/map', {
+                    controller: 'CompanyMapController',
+                    templateUrl: 'partials/company/map.html'
+                })
+                .when("/company/:id/tickets",{
+                    controller: 'CompanyTicketsController',
+                    templateUrl: 'partials/company/tickets.html'
+                })
+                .when('/calendar/action/:id', {
+                    controller: 'CalendarActionController',
+                    templateUrl: 'partials/calendar/action.html',
+                    resolve: {
+                        actionData: function (actionService, $route, $rootScope) {
+                            if ($route.current.params.id == -1) {
+                                return actionService.getActionInfo($route.current.params.companyId).then(function (result) {
+                                    if ($rootScope.clickedDate != undefined) {
+                                        var date = moment($rootScope.clickedDate).format('YYYY-MM-DD');
+                                        var start = moment($rootScope.clickedDate).format('HH:mm');
+                                        var end = moment($rootScope.clickedDate).add('minutes', 60).format('HH:mm');
+                                    }
+                                    else {
+                                        var date = moment().format('YYYY-MM-DD');
+                                        var start = moment().format('HH:mm');
+                                        var end = moment().add('minutes', 60).format('HH:mm');
+                                    }
+                                    return {
+                                        company: {},
+                                        availableSalesProducts: result.data.data.salesProducts,
+                                        finishedOptions: result.data.data.finishedOptions,
+                                        action: {
+                                            date: date,
+                                            timeStart: start,
+                                            timeEnd: end,
+                                            id: -1,
+                                            typeId: 980,
+                                            type: 'Visit',
+                                            responsible: result.data.data.user.id,
+                                            salesProducts: {},
+                                            finished: "OPEN"
+                                        },
+                                        availableActionTypes: result.data.data.actionTypes
+                                    }
+                                })
+                            } else {
+                                return actionService.getAction($route.current.params.id).then(function (result) {
+                                    return {
+                                        company: result.data.data.company,
+                                        finishedOptions: result.data.data.finishedOptions,
+                                        availableSalesProducts: result.data.data.action.salesProducts,
+                                        action: result.data.data.action,
+                                        availableActionTypes: result.data.data.actionTypes
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+                .when('/calendar', {
+                    controller: 'CalendarController',
+                    templateUrl: 'partials/calendar.html'
+                })
+                .when('/login', {
+                    controller: 'LoginController',
+                    templateUrl: 'partials/login.html'
+
+                })
+                .when('/logout', {
+                    controller: 'LogoutController',
+                    templateUrl: 'partials/login.html'
+                })
+                .otherwise({ redirectTo: '/dashboard' });
+
+
+            $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+
+
+        }]);
+
+
+        angular.module("mobileApp.controllers", ["mobileApp.services"])
+            .controller("LoginController", ['$scope', '$location', '$rootScope', 'sessionService', function ($scope, $location, $rootScope, sessionService) {
+
+                $scope.submit = function () {
+                    $scope.showError = false;
+                    sessionService.getLoginSettings($scope.username, $scope.login).then(function (result) {
+
+                        if (result.data.authenticated == "true") {
+                            $rootScope.username = result.data.name;
+                            $location.path('/dashboard');
+                        }
+
+                    })
+                }
+
+            }])
+            .controller("DashboardCompaniesController", ['$scope', '$rootScope', '$location', 'companyService', function ($scope, $rootScope, $location, companyService) {
+
+                $scope.search = function () {
+                    companyService.searchCompanies($scope.searchValue).then(function (result) {
+
+                        if (result.data.data.companies.length == 1) {
+                            $rootScope.currentCompanies = [result.data.data.companies[0]];
+                            $rootScope.currentCompanySearch = $scope.searchValue;
+                            $location.path('/company/' + result.data.data.companies[0].id);
+                        } else {
+                            $rootScope.currentCompanies = result.data.data.companies;
+                            $rootScope.currentCompanySearch = $scope.searchValue;
+                            $location.path('/companies');
+                        }
+                    });
+                }
+
+                $scope.reset = function () {
+                    $scope.searchValue = "";
+                }
+            }])
+              .controller("DashboardHotCompaniesController", ['$scope', '$rootScope', '$location', 'companyService', function ($scope, $rootScope, $location, companyService) {
+
+                  $scope.isOpen = false;
+
+                  $scope.toggle = function () {
+                      $scope.isOpen = !$scope.isOpen;
+                  }
+
+                  companyService.getDashboardCompanies().then(function (result) {
+                      $scope.companies = result.data.data.companies;
+                  })
+
+              }])
+            .controller("DashboardCalendarController", ['$scope', '$rootScope', '$location', 'calendarService', function ($scope, $rootScope, $location, calendarService) {
+                $scope.calendarLoading = false;
+                $scope.events = [];
+                $scope.eventSources = [$scope.events];
+
+                $scope.click = function (actionId) {
+                    $scope.calendarLoading = true;
+                    $location.path('/calendar/action/' + actionId);
+                    $scope.$apply();
+                }
+
+                $scope.create = function (date) {
+                    $scope.calendarLoading = true;
+                    $rootScope.clickedDate = date;
+                    $location.path('/calendar/action/-1');
+                    $scope.$apply();
+                }
+
+                $scope.updateEvents = function (start, end) {
+                    calendarService.getCalendar(start, end).then(function (result) {
+                        var actions = result.data.data.actions;
+                        $scope.events.splice(0, $scope.events.length);
+
+                        for (var i in actions) {
+                            var event = {
+                                id: actions[i].id,
+                                title: actions[i].company + " " + actions[i].title,
+                                start: actions[i].start,
+                                end: actions[i].end,
+                                allDay: false
+                            }
+                            $scope.events.push(event);
+                        }
+                    });
+                }
+
+                $scope.uiConfig = {
+                    calendar: {
+                        defaultView: 'agendaDay',
+                        height: 480,
+                        allDaySlot: false,
+                        header: {
+                            left: 'prev, today, next',
+                            center: '',
+                            right: ''
+                        },
+                        columnFormat: {
+                            day: 'dddd d/M'
+                        },
+                        axisFormat: 'H:mm',
+                        minTime: 7,
+                        //maxTime: 19
+                        eventClick: function (event) {
+                            $scope.click(event.id);
+                        },
+                        dayClick: function (date) {
+                            $scope.create(moment(date));
+                        },
+                        viewRender: function (view, element) {
+                            $scope.updateEvents(view.start, view.end);
+                        }
+                    }
+                };
+
+
+            }])
+            .controller("CompaniesController", ['$scope', '$rootScope', 'companyService', function ($scope, $rootScope, companyService) {
+                $scope.searchState = "name"
+                $scope.hasSearched = false;
+                if ($rootScope.currentCompanySearch != undefined)
+                    $scope.searchValue = $rootScope.currentCompanySearch;
+
+                if ($scope.companies == undefined)
+                    if ($rootScope.currentCompanies != undefined)
+                        $scope.companies = $rootScope.currentCompanies;
+
+                $scope.search = function () {
+                    companyService.searchCompanies($scope.searchValue, $scope.searchState).then(function (result) {
+                        $rootScope.currentCompanies = $scope.companies = result.data.data.companies;
+                        $rootScope.currentCompanySearch = $scope.searchValue;
+                        $scope.hasSearched = true;
+                    });
+                }
+
+                $scope.reset = function () {
+                    $scope.searchValue = "";
+                    $scope.companies = [];
+                }
+
+                $scope.changeState = function (newState) {
+                    $scope.searchState = newState;
+                }
+            }])
+            .controller("CompanyController", ['$scope', '$routeParams', 'companyService', 'company', function ($scope, $routeParams, companyService, company) {
+                $scope.company = company;
+            }])
+            .controller("CompanyContactsController", ['$scope', '$routeParams', '$location', '$anchorScroll', '$sanitize', 'companyService', 'company', function ($scope, $routeParams, $location, $anchorScroll, $sanitize, companyService, company) {
+                $location.hash('contacts');
+                $scope.isEditing = false;
+                $scope.showResult = false;
+                $scope.resultClass = "valid";
+                $scope.selectedContact = {};
+
+                $scope.company = company;
+
+                $scope.edit = function (contactId) {
+
+                    $anchorScroll();
+                    $scope.isEditing = true;
+                    $scope.showResult = false;
+                    var contacts = $.grep($scope.company.contacts, function (contact) {
+                        return contact.id == contactId;
+                    });
+                    if (contacts.length == 1) {
+                        $scope.selectedContact = contacts[0];
+                        $scope.selectedContact.companyId = $scope.company.id;
+                    }
+
+
+                }
+
+                $scope.close = function () {
+                    $scope.isEditing = false;
+                }
+
+                $scope.new = function () {
+                    $scope.isEditing = true;
+                    $scope.selectedContact = {
+                        id: -1,
+                        companyId: $scope.company.id
+                    }
+                }
+
+                $scope.update = function () {
+                    companyService.updateCompanyContact($scope.selectedContact).then(function (result) {
+                        $scope.showResult = true;
+                        if (result.data.data.result == "OK") {
+                            $scope.resultClass = "valid";
+                            $scope.results = [{ description: "Update successful" }];
+                        }
+                        else {
+                            $scope.resultClass = "invalid";
+                            $scope.results = result.data.data.errors;
+                        }
+                    });
+                }
+
+                $scope.closeResult = function () {
+                    $scope.showResult = false;
+                }
+            }])
+            .controller("CompanyKorfineController", ['$scope', '$routeParams', '$sanitize', 'companyService', 'company', function ($scope, $routeParams, $sanitize, companyService, company) {
+                $scope.showResult = false;
+
+                company.extranetUrl = $sanitize(company.extranetUrl).replace('&amp;', '&');
+
+                $scope.company = company;
+
+                $scope.activateKorfine = function () {
+                    companyService.activateKorfine($scope.company.id).then(function (result) {
+                        $scope.showResult = true;
+                        if (result.data.data.result == "OK") {
+                            $scope.resultClass = "valid";
+                            $scope.results = [{ description: "Activation successful" }];
+                            $scope.company.isKorfine = true;
+                        }
+                        else {
+                            $scope.resultClass = "invalid";
+                            $scope.results = result.data.data.errors;
+                        }
+                    });
+                }
+            }])
+            .controller("CompanyActionsController", ['$scope', '$rootScope', '$routeParams', '$location', 'actionService', function ($scope, $rootScope, $routeParams, $location, actionService) {
+                $scope.isLoading = true;
+                $scope.previous = "actions";
+
+                if ($rootScope.companyActions != undefined && $rootScope.companyActions.startDate != undefined && $rootScope.companyActions.endDate != undefined) {
+                    $scope.startDate = $rootScope.companyActions.startDate;
+                    $scope.endDate = $rootScope.companyActions.endDate;
+                } else {
+                    $scope.startDate = moment().subtract('months', 12).format('YYYY-MM-DD');
+                    $scope.endDate = moment().add('months', 6).format('YYYY-MM-DD');
+                }
+
+                var getActions = function () {
+                    $scope.isLoading = true;
+                    actionService.getActions($routeParams.id, moment($scope.startDate).format('DD/MM/YYYY'), moment($scope.endDate).format('DD/MM/YYYY')).then(function (result) {
+                        $scope.actions = result.data.data.actions;
+                        $scope.company = result.data.data.company;
+                        $scope.isLoading = false;
+                    })
+                };
+
+                getActions();
+                //$scope.new = function () {
+                //    $location.hash('#company/' + $scope.company.id + '/actions/new');
+                //}
+
+                $scope.search = function () {                    
+                    $rootScope.companyActions = {};
+                    $rootScope.companyActions.startDate = $scope.startDate;
+                    $rootScope.companyActions.endDate = $scope.endDate;
+                    getActions();
+                }
+
+            }])
+            .controller("CompanyVisitsController", ['$scope', '$rootScope', '$routeParams', '$location', 'actionService', function ($scope, $rootScope, $routeParams, $location, actionService) {
+                $scope.isLoading = true;
+                $scope.previous = "visits";
+                if ($rootScope != undefined && $rootScope.companyVisits != undefined && $rootScope.companyVisits.startDate != undefined && $rootScope.companyVisits.endDate != undefined) {
+                    $scope.startDate = $rootScope.companyVisits.startDate;
+                    $scope.endDate = $rootScope.companyVisits.endDate;
+                } else {
+                    $scope.startDate = moment().subtract('months', 12).format('YYYY-MM-DD');
+                    $scope.endDate = moment().add('months', 6).format('YYYY-MM-DD');
+                }
+
+                $scope.new = function () {
+                    $location.hash('#company/' + $scope.company.id + '/visits/new');
+                }
+
+                var getVisits = function () {
+                    $scope.isLoading = true;
+                    actionService.getVisits($routeParams.id, moment($scope.startDate).format('DD/MM/YYYY'), moment($scope.endDate).format('DD/MM/YYYY'))
+                                        .then(function (result) {
+                                            $scope.actions = result.data.data.actions;
+                                            $scope.company = result.data.data.company;
+                                            $scope.isLoading = false;
+                                        });
+                }
+
+                getVisits();
+
+                $scope.search = function () {
+                    $rootScope.companyVisits = {};
+                    $rootScope.companyVisits.startDate = $scope.startDate;
+                    $rootScope.companyVisits.endDate = $scope.endDate;
+                    getVisits();
+                }
+
+            }])
+            .controller("CompanyInvoicesController", ['$scope', '$rootScope', '$routeParams', '$location', 'companyService', function ($scope, $rootScope, $routeParams, $location, companyService) {
+                $scope.isLoading = true;
+                companyService.getCompanyInvoices($routeParams.id).then(function (result) {
+                    $scope.company = result.data.data.company;
+                    $scope.invoices = {};
+                    var invoices = result.data.data.invoices;
+                    var companies = {};
+                    for (var i in invoices) {
+                        var name = invoices[i].company;
+                        var invoice = invoices[i];
+                        if (!(name in companies)) {
+                            companies[name] = {
+                                name: name,
+                                invoices: []
+                            }
+                            companies[name].invoices.push(invoice);
+                        }
+                        else {
+                            companies[name].invoices.push(invoice);
+                        }
+                    }
+
+                    $scope.companies = companies;
+                    $scope.hasInvoices = invoices.length > 0;
+                    $scope.isLoading = false;
+                })
+
+            }])
+            .controller("CompanyActionController", ['$scope', '$routeParams', '$sce', 'actionService', 'actionData', function ($scope, $routeParams, $sce, actionService, actionData) {
+                $scope.showResult = false;
+                $scope.previous = $routeParams.previous;
+                $scope.action = actionData.action;
+                $scope.company = actionData.company;
+                $scope.availableSalesProducts = actionData.availableSalesProducts;
+                $scope.finishedOptions = actionData.finishedOptions;
+                $scope.selectedSalesProducts = $.map(
+                            $.grep(actionData.action.salesProducts, function (salesproduct) {
+                                return salesproduct.isSelected;
+                            }), function (item) {
+                                return item.id;
+                            });
+                $scope.update = function () {
+                    $scope.showResult = false;
+                    var action = $scope.action;
+                    action.companyId = $scope.company.id.id != undefined ? $scope.company.id.id : $scope.company.id;
+                    action.typeId = $scope.action.typeId.id != undefined ? $scope.action.typeId.id : $scope.action.typeId;
+                    action.salesProducts = $scope.selectedSalesProducts.join(',');
+                    
+                    actionService.updateAction(action).then(function (result) {
+                        $scope.showResult = true;
+                        if (result.data.data.result == "OK") {
+                            $scope.resultClass = "valid";
+                            $scope.results = [{ description: "Update successful" }];
+                            $scope.action.id = result.data.data.id;                            
+                            $scope.action.type = $.grep(actionData.availableActionTypes, function (item) { return item.id == $scope.action.typeId })[0].text;
+                        }
+                        else {
+                            $scope.resultClass = "invalid";
+                            $scope.results = result.data.data.errors;
+                        }
+                    });
+
+                }
+
+                $scope.closeResult = function () {
+                    $scope.showResult = false;
+                }
+                $scope.actionOptions = {
+                    data: {
+                        results: actionData.availableActionTypes
+                    }
+                }
+
+            }])
+            .controller("CompanyMapController", ['$scope', '$routeParams', 'companyService', function ($scope, $routeParams, companyService) {
+
+                $scope.mapHidden = true;
+
+                $scope.includeNeighbours = true;
+
+                onMarkerClicked = function (marker) {
+                    marker.showWindow = true;                  
+                };
+
+                companyService.getCompanyMap($routeParams.id, $scope.includeNeighbours).then(function (result) {
+                    $scope.mapHidden = false;
+                    $scope.company = result.data.data.company;
+                    $scope.center = {
+                        latitude: result.data.data.map.latitude,
+                        longitude: result.data.data.map.longitude
+                    }
+                    var neighbours = result.data.data.neighbours;
+                    var markers = [];
+                    for (var i in neighbours) {
+                        var neighbour = neighbours[i];
+                        var icon = neighbour.customer == "true" ? "images/customer.png" : "images/prospect.png";                        
+                        markers.push({
+                            infoWindow: neighbour.name + '<br/><a href="#/company/' + neighbour.id + '"><span class="btn btn-primary">Go</span></a>',
+                            icon: icon,
+                            latitude: neighbour.latitude,
+                            longitude: neighbour.longitude
+                        })
+                    }
+
+                    markers.push({
+                        infoWindow: result.data.data.company.name + '<br/><a href="#/company/' + result.data.data.company.id + '"><span class="btn btn-primary">Go</span></a>',
+                        icon: "images/selectedCustomer.png",
+                        latitude: result.data.data.map.latitude,
+                        longitude: result.data.data.map.longitude
+                    });
+                    $scope.markers = markers;                    
+                    
+                });
+
+                $scope.center = {
+                    latitude: 1,
+                    longitude: 1
+                },
+                $scope.markers = [],
+                $scope.zoom = 14;                
+            }])
+            .controller("CompanyTicketsController", ['$scope', '$routeParams', 'companyService', function ($scope, $routeParams, companyService) {
+                companyService.getCompanyTickets($routeParams.id).then(function (result) {
+                    $scope.tickets = result.data.data.tickets;
+                });
+             }])
+            .controller("InvoiceController", ['$scope', '$routeParams', 'companyService', 'invoiceData', function ($scope, $routeParams, companyService, invoiceData) {
+                $scope.invoice = invoiceData.invoice;
+                $scope.company = invoiceData.company;
+            }])
+            .controller("CalendarActionController", ['$scope', '$routeParams', '$http', 'limitToFilter', 'actionService', 'companyService', 'actionData', function ($scope, $routeParams, $http, limitToFilter, actionService, companyService, actionData) {
+                
+                $scope.showResult = false;
+                $scope.action = actionData.action;
+                $scope.company = actionData.company;
+                $scope.availableSalesProducts = actionData.availableSalesProducts;
+                $scope.finishedOptions = actionData.finishedOptions;
+
+                $scope.selectedSalesProducts = $.map(
+                            $.grep(actionData.action.salesProducts, function (salesproduct) {
+                                return salesproduct.isSelected;
+                            }), function (item) {
+                                return item.id;
+                            });
+                $scope.update = function () {
+                    $scope.showResult = false;
+                    var action = $scope.action;                    
+                    action.companyId = $scope.company.id.id != undefined ? $scope.company.id.id : $scope.company.id;
+                    action.typeId = $scope.action.typeId.id;
+                    action.salesProducts = $scope.selectedSalesProducts.join(',');
+
+                    actionService.updateAction(action).then(function (result) {
+                        $scope.showResult = true;
+                        if (result.data.data.result == "OK") {
+                            $scope.resultClass = "valid";
+                            $scope.results = [{ description: "Update successful" }];
+                            $scope.action.id = result.data.data.id;
+                            $scope.action.type = $.grep(actionData.availableActionTypes, function (item) { return item.id == $scope.action.typeId })[0].text;
+                        }
+                        else {
+                            $scope.resultClass = "invalid";
+                            $scope.results = result.data.data.errors;
+                        }
+                    });
+                }
+
+                $scope.closeResult = function () {
+                    $scope.showResult = false;
+                }
+                
+                $scope.actionOptions = {
+                    data: {
+                        results: actionData.availableActionTypes                       
+                    }
+                }
+                $scope.companyOptions = {
+                    placeholder: 'Search for a company',
+                    minimumInputLength: 3,
+                    minimumResultsForSearch: 10,
+                    ajax: {
+                        url: 'searchCompanies',
+                        data: function (term, page) {
+                            return { searchValue: term };
+                        },
+                        results: function (data, page) {
+                            return { results: data.data.companies };
+                        }
+                    },
+                    formatResult: function (company) {
+                        return company.name + " - " + company.city;
+                    },
+                    formatSelection: function (company) {
+                        return company.name + " - " + company.city;
+                    }
+                }
+
+            }])
+            .controller("CalendarController", ['$scope', '$rootScope', '$location', 'calendarService', function ($scope, $rootScope, $location, calendarService) {
+                $scope.calendarLoading = false;
+                $scope.events = [];
+                $scope.eventSources = [$scope.events];
+
+                $scope.click = function (actionId) {
+                    $scope.calendarLoading = true;
+                    $location.path('/calendar/action/' + actionId);
+                    $scope.$apply();
+                }
+
+                $scope.create = function (date) {
+                    $scope.calendarLoading = true;
+                    $rootScope.clickedDate = date;
+                    $location.path('/calendar/action/-1');
+                    $scope.$apply();
+                }
+
+                $scope.updateEvents = function (start, end) {
+                    calendarService.getCalendar(start, end).then(function (result) {
+                        var actions = result.data.data.actions;
+                        $scope.events.splice(0, $scope.events.length);
+
+                        for (var i in actions) {
+                            var event = {
+                                id: actions[i].id,
+                                title: actions[i].company + " " + actions[i].title,
+                                start: actions[i].start,
+                                end: actions[i].end,
+                                allDay: false
+                            }
+                            $scope.events.push(event);
+                        }
+                    });
+                }
+
+                $scope.uiConfig = {
+                    calendar: {
+                        defaultView: 'agendaWeek',
+                        //height: 480,
+                        allDaySlot: false,
+                        header: {
+                            left: 'prev, today, next',
+                            center: 'title',
+                            right: 'month, agendaWeek, agendaDay'
+                        },
+                        columnFormat: {
+                            month: 'ddd',
+                            week: 'ddd d/M',
+                            day: 'dddd d/M'
+                        },
+                        titleFormat: {
+                            month: 'MMMM yyyy',
+                            week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
+                            day: 'dddd,d MMM, yyyy'
+                        },
+                        timeFormat: 'H:mm',
+                        axisFormat: 'H:mm',
+                        minTime: 7,
+                        //maxTime: 19
+                        eventClick: function (event) {
+                            $scope.click(event.id);
+                        },
+                        dayClick: function (date) {
+                            $scope.create(moment(date));
+                        },
+                        viewRender: function (view, element) {
+                            $scope.updateEvents(view.start, view.end);
+                        }
+                    }
+                };
+
+            }])
+            .controller("LogoutController", ['$location', '$cookieStore', '$scope', function ($location, $cookieStore, $scope) {
+                $cookieStore.remove("4DSession");
+                $location.path('/login');
+            }]);
+
+        angular.module("mobileApp.services", [])
+            .factory('companyService', ['$http', function ($http) {
+
+                return {
+                    getDashboardCompanies: function () {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/dashboardCompanies', method: 'GET', params: { _: new Date() } });
+                        }
+                        return promise;
+                    },
+                    searchCompanies: function (searchValue, searchState) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/searchCompanies', method: 'GET', params: { searchValue: searchValue, searchState: searchState, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyInfo: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyInfo', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyContacts: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyContacts', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    updateCompanyContact: function (contact) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/updateCompanyContact', method: 'GET', params: contact, _: moment().format('X') });
+                        }
+                        return promise;
+                    },
+                    getCompanyKorfine: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyKorfine', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    activateKorfine: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/activateKorfine', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyInvoices: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyInvoices', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyInvoice: function (invoiceId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyInvoice', method: 'GET', params: { invoiceId: invoiceId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyMap: function (companyId, includeNeighbours) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyMap', method: 'GET', params: { companyId: companyId, includeNeighbours: includeNeighbours, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getCompanyTickets: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCompanyTickets', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    }
+
+                }
+            }])
+            .factory('calendarService', ['$http', function ($http) {
+                return {
+                    getCalendar: function (start, end) {
+                        var promise;
+
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getCalendar', method: 'GET', params: { startDate: moment(start).format('DD/MM/YYYY'), endDate: moment(end).format('DD/MM/YYYY'), _: moment().format('X') } });
+                        }
+                        return promise;
+                    }
+                }
+            }])
+            .factory('actionService', ['$http', function ($http) {
+                return {
+                    getActions: function (companyId, startDate, endDate) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getActions', method: 'GET', params: { companyId: companyId, startDate: startDate, endDate: endDate, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getVisits: function (companyId, startDate, endDate) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getVisits', method: 'GET', params: { companyId: companyId, startDate: startDate, endDate: endDate, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getAction: function (actionId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getAction', method: 'GET', params: { actionId: actionId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    getActionInfo: function (companyId) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getActionInfo', method: 'GET', params: { companyId: companyId, _: moment().format('X') } });
+                        }
+                        return promise;
+                    },
+                    updateAction: function (action) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/updateAction', method: 'GET', params: action, _: moment().format('X') });
+                        }
+                        return promise;
+                    }
+                }
+            }])
+            .factory('sessionService', ['$http', function ($http) {
+                return {
+                    getLoginSettings: function (username, password) {
+                        var promise;
+                        if (!angular.isDefined(promise)) {
+                            promise = $http({ url: baseUrl + '/getLoginSettings', method: 'GET', params: { username: username, password: password, _: moment().format('X') } });
+                        }
+                        return promise;
+                    }
+                }
+            }]);
+
+        mobileApp
+            .filter('capitalizeFirst', function () {
+                return function (input) {
+                    return input.charAt(0).toUpperCase() + input.substr(1);
+                }
+            })
+            .filter('euro', function () {
+                return function (input) {
+                    return "€ " + input;
+                }
+            })
+            .filter('url', function () {
+                return function (input) {
+                    if (input.indexOf("http://") == -1)
+                        return "http://" + input;
+                    return input;
+                }
+            }).filter('percentage', function () {
+                return function (input) {
+                    return input + "%"
+                }
+            });
+
+        mobileApp
+            .directive('selectManyFromFew', function () {
+                return {
+                    restrict: 'A',
+                    templateUrl: 'templates/selectManyFromFew.html',
+                    scope: { list: '=', selection: '=' },
+                    transclude: true,
+                    link: function ($scope, element, attr, ctrl) {
+
+                        //init list based on selection
+                        angular.forEach($scope.list, function (item) {
+                            if ($scope.selection.indexOf(item.id) >= 0) { item.isSelected = true; }
+                        });
+
+                        //if list changes, synch selection and show/hide isSufficient class
+                        $scope.$watch('list', function (newValue, oldValue) {
+                            $scope.synchSelection();
+                            element.toggleClass('isSufficient', $scope.selection.length > 0);
+                        }, true);
+
+                        //if selection breaks the rules, change the list
+                        $scope.$watch('selection', function (newValue, oldValue) {
+                            var maxSelect = Number(attr.maxSelect);
+                            if (maxSelect && $scope.selection.length > maxSelect) {
+                                var item = getById($scope.list, $scope.selection[0]);
+                                if (item) item.isSelected = false;
+                            }
+                        }, true);
+
+                        $scope.getClass = function (item) {
+                            return (item.isSelected ? (attr.checkedClass || 'btn-success') : '');
+                        };
+
+                        //generic function
+                        var getById = function (arrayOfObjects, id) {
+                            for (var i = 0; i < arrayOfObjects.length; i++) {
+                                if (arrayOfObjects[i].id == id) return arrayOfObjects[i];
+                            }
+                        };
+
+                        //synch selection to list (and keep the order of selection)
+                        $scope.synchSelection = function () {
+                            angular.forEach($scope.list, function (item) {
+                                var ind = $scope.selection.indexOf(item.id); //index of item in selection
+                                if (item.isSelected && ind === -1) $scope.selection.push(item.id); //selected but didn't exist => add
+                                if (!item.isSelected && ind > -1) $scope.selection.splice(ind, 1); //not selected but existed => remove
+                            });
+                        };
+                    }
+                }
+            })
+            .directive('buttonsRadio', function () {
+                return {
+                    restrict: 'E',
+                    scope: {
+                        model: '=',
+                        options: '='
+                    },
+                    controller: function ($scope) {
+                        $scope.activate = function (option) {
+                            $scope.model = option;
+                        };
+                    },
+                    template: "<button type='button' class='btn btn-default' " + "ng-class='{active: option == model}'" + "ng-repeat='option in options' " + "ng-click='activate(option)'>{{option}} " + "</button>"
+                };
+            });
+
+        mobileApp
+           .config(function ($provide, $httpProvider) {
+               $provide.factory('AuthenticationInterceptor', ['$q', '$location', '$rootScope', function ($q, $location, $rootScope) {
+                   return {
+                       request: function (config) {
+                           return config || $q.when(config);
+                       },
+
+                       requestError: function (rejection) {
+                           return $q.reject(rejection);
+                       },
+                       response: function (response) {
+                           if (response.data.authenticated === "false") {
+                               $location.path('/login');
+                               return $q.reject(response);
+                           }
+                           return response || $q.when(response);
+                       }
+                       ,
+                       responseError: function (rejection) {
+                           return $q.reject(rejection);
+                       }
+                   }
+               }]);
+               $httpProvider.interceptors.push('AuthenticationInterceptor');
+           });
+
+
+
+
+    </script>
+</body>
+</html>
+

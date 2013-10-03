@@ -1,0 +1,22 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",
+    "data" : 
+		{ "companies": [
+		    
+		        <!--#4DLOOP AWebCompaniesId-->
+		            {
+		                "id": <!--#4DVAR AWebCompaniesId{AWebCompaniesId}-->,
+		                "name": "<!--#4DVAR AWebCompaniesName{AWebCompaniesId}-->",
+                        "city": "<!--#4DVAR AWebCompaniesCity{AWebCompaniesId}-->",
+                        "hasSkarabee": "<!--#4DVAR AWebHasSkarabee{AWebCompaniesId}-->",   		              
+                        "hasVitrine": "<!--#4DVAR AWebHasVitrine{AWebCompaniesId}-->",   		              
+                        "hasKorfina": "<!--#4DVAR AWebHasKorfina{AWebCompaniesId}-->",   		              
+                        "hasKorfine": "<!--#4DVAR AWebHasKorfine{AWebCompaniesId}-->"
+		            }
+		            <!--#4DIF (AWebCompaniesId<size of array(AWebCompaniesId)) -->
+		                ,
+		            <!--#4DENDIF -->
+		        <!--#4DENDLOOP-->   
+		    ]
+		}
+}

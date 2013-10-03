@@ -1,0 +1,107 @@
+<div class="row" style="margin-bottom: 15px;">
+    <button class="btn btn-primary pull-right" ng-disabled="form.$invalid" ng-click="update()" style="margin-left: 15px;" ng-switch on="action.id < 0">
+        <i class="icon-save"></i>&nbsp;
+            <span ng-switch-when="true">Save</span>
+        <span ng-switch-when="false">Update</span>
+    </button>
+</div>
+<div class="row">
+    <div id="result" class="well well-sm {{resultClass}}" ng-show="showResult">
+        <button class="btn btn-primary pull-right" ng-click="closeResult()"><i class="icon-remove"></i>Close</button>
+        <ul ng-repeat="result in results">
+            <li>{{result.description}}</li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <form class="form-horizontal" role="form" name="form" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label" ng-class="{error: form.company.$invalid}">Company *</label>
+            <div class="col-xs-9" ng-switch="company.id > 0 ">
+                <p class="form-control-static" ng-switch-when="true"><a ng-href="#/company/{{company.id}}">{{company.name}}</a></p>
+                <div class="form-control" ng-switch-when="false">
+                    <div class="input-group">
+                        <input ng-model="company.id" name="company" required ui-select2="companyOptions" style="width: 100%;" />
+                        <span class="input-group-addon"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Responsible *</label>
+            <div class="col-xs-9">
+                <p class="form-control-static">{{action.responsible}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label"  ng-class="{error: form.actionType.$invalid}">Type *</label>
+            <div class="col-xs-9" ng-switch on="action.id > 0">
+                <p class="form-control-static" ng-switch-when="true">{{action.type}}</p>
+                <div class="form-control" ng-switch-when="false">
+                    <div class="input-group">
+                        <input name="actionType" ng-model="action.typeId" ui-select2="actionOptions" required style="width: 100%;" />
+                        <span class="input-group-addon"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="date" class="col-xs-3 control-label">Date *</label>
+            <div class="col-xs-9">
+                <input type="date" class="form-control" id="date" placeholder="Date" ng-model="action.date" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="date" class="col-xs-3 control-label">Finished *</label>
+            <div class="col-xs-9">
+                <buttons-radio class="btn-group" data-toggle="buttons-radio"
+                    model='action.finished'
+                    options='finishedOptions'>
+                    </buttons-radio>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="timeStart" class="col-xs-3 control-label">Time *</label>
+            <div class="col-xs-9">
+                <input type="time" class="form-control" id="timeStart" placeholder="Start" ng-model="action.timeStart" />
+                <input type="time" class="form-control" id="timeEnd" placeholder="End" ng-model="action.timeEnd" />
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.description.$invalid}">
+            <label for="description" class="col-xs-3 control-label" >Description *</label>
+            <div class="col-xs-9">
+                <input type="text" class="form-control" id="description" placeholder="Description" name="description" ng-model="action.description" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="notes" class="col-xs-3 control-label">Notes</label>
+            <div class="col-xs-9">
+                <textarea rows="6" type="text" class="form-control" id="notes" placeholder="Notes" ng-model="action.notes" />
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.feedback.$invalid}">            
+            <label for="feedback" class="col-xs-3 control-label">Feedback</label>
+            <div class="col-xs-9">
+                <textarea feedbackfinished rows="6" name="feedback" class="form-control" id="feedback" placeholder="Feedback" ng-model="action.feedback" />
+            </div>
+        </div>
+        <div class="form-group" ng-show="action.typeId.id == 980 || action.typeId == 980">
+            <label for="salesproducts" class="col-xs-3 control-label">Credits</label>
+            <div class="col-xs-9">
+                <div id="salesproducts" checked-class="btn-success" select-many-from-few list="availableSalesProducts" selection="selectedSalesProducts"></div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="action.documents.length > 0">
+            <label for="documents" class="col-xs-3 control-label">Documents</label>
+            <div class="col-xs-9">
+                <div class="list-group" ng-repeat="document in action.documents" ng-show="action.id > 0" bindonce>
+                    <a target="_blank" bo-href="'/getDocument?documentId=' + document.id">
+                        <div class="list-group-item" bo-text="document.name + ' - ' + document.date">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

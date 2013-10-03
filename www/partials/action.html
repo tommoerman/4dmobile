@@ -1,0 +1,92 @@
+<div>
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a href="#/company/{{company.id}}"><i class="icon-gear"></i>&nbsp;{{company.name}}</a></li>
+            <li><a ng-href="#company/{{company.id}}/{{previous}}"><span ng-switch on="previous">
+                <i class="icon-globe" ng-switch-when="visits"></i>
+                <i class="icon-envelope" ng-switch-when="actions"></i>
+            </span>
+                {{previous | capitalizeFirst}}
+
+            </a></li>
+            <li class="active" ng-hide="action.id == -1" ng-bind-html="action.description"></li>
+            <li class="active" ng-show="action.id == -1">New</li>
+        </ol>
+    </nav>
+    <div class="row" style="margin-bottom: 15px;">
+        <button class="btn btn-primary pull-right" ng-disabled="form.$invalid" ng-click="update()" style="margin-left: 15px;" ng-switch on="action.id < 0">
+            <i class="icon-save"></i>&nbsp;
+            <span ng-switch-when="true">Save</span>
+            <span ng-switch-when="false">Update</span>
+        </button>
+    </div>
+    <div class="row">
+        <div id="result" class="well well-sm {{resultClass}}" ng-show="showResult">
+            <button class="btn btn-primary pull-right" ng-click="closeResult()"><i class="icon-remove"></i>Close</button>
+            <ul ng-repeat="result in results">
+                <li>{{result.description}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <form class="form-horizontal" role="form" novalidate>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Company</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static">{{company.name}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Responsible</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static">{{action.responsible}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Type</label>
+                <div class="col-xs-9">
+                    <p class="form-control-static">{{action.type}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date" class="col-xs-3 control-label">Date</label>
+                <div class="col-xs-9">
+                    <input type="date" class="form-control" id="date" placeholder="Date" ng-model="action.date" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="timeStart" class="col-xs-3 control-label">Time</label>
+                <div class="col-xs-9">
+                    <input type="time" class="form-control" id="timeStart" placeholder="Start" ng-model="action.timeStart" />
+                    <input type="time" class="form-control" id="timeEnd" placeholder="End" ng-model="action.timeEnd" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-xs-3 control-label">Description</label>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control" id="description" placeholder="Description" ng-model="action.description" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="notes" class="col-xs-3 control-label">Notes</label>
+                <div class="col-xs-9">
+                    <textarea rows="6" type="text" class="form-control" id="notes" placeholder="Notes" ng-model="action.notes" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="feedback" class="col-xs-3 control-label">Feedback</label>
+                <div class="col-xs-9">
+                    <textarea rows="6" class="form-control" id="feedback" placeholder="Feedback" ng-model="action.feedback" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="salesproducts" class="col-xs-3 control-label">Credits</label>
+                <div class="col-xs-9">
+                    <div id="salesproducts" checked-class="btn-success" select-many-from-few list="availableSalesProducts" selection="selectedSalesProducts"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
