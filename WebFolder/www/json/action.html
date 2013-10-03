@@ -1,0 +1,80 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+	{
+        "company": {
+            "id": "<!--#4DVAR VWebCompanyId-->",
+            "name": "<!--#4DVAR VWebCompanyName-->"
+        },
+        "action": {
+		    "id": "<!--#4DVAR VWebActionId-->",
+		    "description": "<!--#4DVAR VWebDescription-->",		    
+		    "feedback": "<!--#4DVAR VWebFeedback-->",
+		    "date" : "<!--#4DVAR VWebDate-->",
+		    "timeStart" : "<!--#4DVAR VWebTimeStart-->",
+		    "timeEnd" : "<!--#4DVAR VWebTimeEnd-->",
+		    "finished" : "<!--#4DVAR VWebFinished-->",
+		    "notes" :"<!--#4DVAR VWebNotes-->",
+            "responsible": "<!--#4DVAR VWebResponsible-->",
+            "type": "<!--#4DVAR VWebActionType-->",
+            "typeId" : "<!--#4DVAR VWebActionTypeId-->",
+		    "salesProducts" : [
+		
+		           <!--#4DLOOP AWebSalesProductId-->
+	                {
+	                    "id": "<!--#4DVAR AWebSalesProductId{AWebSalesProductId}-->",
+	                    "name": "<!--#4DVAR AWebSalesProductName{AWebSalesProductId}-->",
+	                    "credits": "<!--#4DVAR AWebSalesProductCredits{AWebSalesProductId}-->",
+	                    "isSelected": <!--#4DVAR AWebSalesProductSelected{AWebSalesProductId}-->
+	                }
+	                <!--#4DIF (AWebSalesProductId<size of array(AWebSalesProductId)) -->
+	                    ,
+	                <!--#4DENDIF -->
+	            <!--#4DENDLOOP-->   
+		
+		    ],
+            "documents": [
+                <!--#4DLOOP AWebActionDocumentId-->
+	                {
+	                    "id": "<!--#4DVAR AWebActionDocumentId{AWebActionDocumentId}-->",
+	                    "name": "<!--#4DVAR AWebActionDocumentName{AWebActionDocumentId}-->",
+                        "date": "<!--#4DVAR AWebActionDocumentDate{AWebActionDocumentId}-->"
+	                }
+	                <!--#4DIF (AWebActionDocumentId<size of array(AWebActionDocumentId)) -->
+	                    ,
+	                <!--#4DENDIF -->
+	            <!--#4DENDLOOP-->  
+        ]
+        },                
+        "finishedOptions": [
+                "OPEN","CANCELLED", "FINISHED"
+        ], 
+        "actionTypes": [
+            {
+                "id": "980",
+                "text": "Visit"
+            },
+            {
+                "id": "2539",
+                "text": "Telephone"
+            },
+            {
+                "id": "982",
+                "text": "Meeting"
+            },
+            {
+                "id": "3268",
+                "text": "Administration/Organisation"
+            },
+            {
+                "id": "3269",
+                "text": "Travel Time"
+            },            
+            {
+                "id": "2540",
+                "text": "Internal request"
+            }
+            ]
+
+    }
+}

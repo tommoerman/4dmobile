@@ -1,0 +1,34 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+		{
+            "company":{
+                "id": <!--#4DVAR VWebId-->,
+		        "name": "<!--#4DVAR VWebName-->",
+		        "street": "<!--#4DVAR VWebAddressStreet-->",
+		        "city": "<!--#4DVAR VWebAddressCity-->",
+		        "zipcode": "<!--#4DVAR VWebAddressZipcode-->"
+            },
+            "map": {
+                "latitude": "<!--#4DVAR VWebLatitude-->",
+		        "longitude": "<!--#4DVAR VWebLongitude-->"
+            },
+            "neighbours": [
+			
+				<!--#4DLOOP AWebMapNeighboursId-->
+					{
+						"id": "<!--#4DVAR AWebMapNeighboursId{AWebMapNeighboursId}-->",
+						"name": "<!--#4DVAR AWebMapNeighboursName{AWebMapNeighboursId}-->",
+						"latitude": "<!--#4DVAR AWebMapNeighboursLatitude{AWebMapNeighboursId}-->",
+						"longitude": "<!--#4DVAR AWebMapNeighboursLongitude{AWebMapNeighboursId}-->",
+                        "customer": "<!--#4DVAR AWebMapNeighboursCustomer{AWebMapNeighboursId}-->"
+					}
+					<!--#4DIF (AWebMapNeighboursId<size of array(AWebMapNeighboursId)) -->
+						,
+					<!--#4DENDIF -->
+				<!--#4DENDLOOP-->	
+			]
+		      
+		    
+	}
+}

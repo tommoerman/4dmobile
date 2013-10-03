@@ -1,0 +1,47 @@
+<div class="row well well-sm" style="margin-bottom: 20px;" bindonce="company">
+    <div class="form-horizontal pull-left">
+        <form ng-submt="$parent.search()">
+            <input type="date" ng-model="$parent.startDate" />
+            <input type="date" ng-model="$parent.endDate" />
+            <span ng-click="$parent.search()"><span class="btn btn-primary"><i class="icon-search"></i>&nbsp;Search</span></span>
+        </form>
+    </div>
+    <div class="pull-right">
+        <a bo-href="'#/company/' + company.id + '/actions/action/-1'" class="btn btn-primary pull-right"><i class="icon-plus"></i>&nbsp;New Action</a>
+        <span ng-show="isLoading" class="loader" style="text-align: center; margin-right:10px;">
+            <img src="images/ajax-loader.gif" />
+        </span>
+    </div>
+</div>
+<div class="row well" ng-switch on="actions.length > 0">
+    <div class="table-responsive" ng-switch-when="true">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <td style="width: 38px;"></td>
+                    <td style="width: 38px;">Resp.</td>
+                    <td ng-hide="previous == 'visits'">Type</td>
+                    <td>Description</td>
+                    <td style="width: 50px;">Date</td>
+                    <td style="width: 38px;">Fin.</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr bindonce ng-repeat="action in actions">
+                    <td><a bo-href-i="#/company/{{company.id}}/{{previous}}/action/{{action.id}}"><i class="icon-edit icon-2x" style="color: #428bca; margin-right: 10px;"></a></i></td>
+                    <td bo-text="action.responsible"></td>
+                    <td ng-hide="previous == 'visits'" bo-text="action.type"></td>
+                    <td bo-html="action.description"></td>
+                    <td bo-text="action.date"></td>
+                    <td>
+                        <i class="icon-ok" bo-show="action.finished"></i>
+                        <i class="icon-minus" bo-hide="action.finished"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-switch-when="false">
+        <div ng-switch-when="false">No results</div>
+    </div>
+</div>

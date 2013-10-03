@@ -1,0 +1,51 @@
+<div id="action">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top" bindonce="company">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a bo-href="'#/company/' + company.id"><i class="icon-gear"></i><span bo-html="'&nbsp;' + company.name"></span></a></li>
+            <li class="active"><i class="icon-euro"></i>&nbsp;Invoices</li>
+        </ol>
+    </nav>
+    <div ng-show="isLoading" class="loader" style="text-align: center;">
+        <img src="images/ajax-loader.gif" />
+    </div>
+    <div ng-repeat="companyInvoices in companies">
+        <div class="row well" bindonce="company">
+            <h4 bo-html="companyInvoices.name"></h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Description</td>
+                            <td>Date</td>
+                            <td>Amount (excl.)</td>
+                            <td>Paid</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr bindonce ng-repeat="invoice in companyInvoices.invoices">
+                            <td><a bo-href-i="#/company/{{company.id}}/invoices/invoice/{{invoice.id}}"><i class="icon-edit icon-2x" style="color: #428bca; margin-right: 10px;"></a></i></td>
+                            <td bo-text="invoice.description"></td>
+                            <td bo-text="invoice.date"></td>
+                            <td bo-text="invoice.amount | euro"></td>
+                            <td>
+                                <i class="icon-ok" bo-show="invoice.paid"></i>
+                                <i class="icon-minus" bo-hide="invoice.paid"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div ng-hide="(hasInvoices && !isLoading)">
+        <h4>No invoices found</h4>
+    </div>
+
+    
+
+</div>
+

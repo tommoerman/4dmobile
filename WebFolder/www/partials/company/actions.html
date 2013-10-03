@@ -1,0 +1,12 @@
+<div id="action">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top"  bindonce="company">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a bo-href="'#/company/' + company.id" bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></a></li>
+            <li class="active"><i class="icon-envelope"></i>&nbsp;Actions</li>
+        </ol>
+    </nav>   
+    <div ng-include="'/partials/company/actionList.html'" />
+</div>
+

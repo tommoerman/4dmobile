@@ -1,0 +1,22 @@
+<div class="panel panel-default" ng-controller="DashboardCompaniesController">
+    <div class="panel-heading">
+        <i class="icon-gears"></i>
+        <a ng-href="#/companies"><i class="icon-reorder pull-right"></i></a>
+        Companies
+    </div>
+    <div>
+        <div class="panel-heading">
+            <form ng-submit="search()" name="companyForm" novalidate>
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="search" ng-model="searchValue" autocomplete="off" ng-minlength="3" required />
+                    <span class="input-group-addon" ng-click="search()">
+                        <i class="icon-search pull-right"></i>
+                    </span>
+                    <span class="input-group-addon" ng-click="reset()">
+                        <i class="icon-remove pull-right"></i>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

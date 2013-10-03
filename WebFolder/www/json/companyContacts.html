@@ -1,0 +1,25 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+		{
+			"id": <!--#4DVAR VWebId-->,
+			"name": "<!--#4DVAR VWebName-->",
+			"contacts": [		    
+		        <!--#4DLOOP AWebContactId-->
+		            {
+		                "id": "<!--#4DVAR AWebContactId{AWebContactId}-->",
+		                "name": "<!--#4DVAR AWebContactName{AWebContactId}-->",
+		                "firstName": "<!--#4DVAR AWebContactFirstName{AWebContactId}-->",
+		                "telephone": "<!--#4DVAR AWebContactTelephone{AWebContactId}-->",
+		                "email": "<!--#4DVAR AWebContactEmail{AWebContactId}-->",
+                        "isKeyContactSkarabee": "<!--#4DVAR AWebContactKeyContactSkarabee{AWebContactId}-->",
+                        "isKeyContactVitrine": "<!--#4DVAR AWebContactKeyContactVitrine{AWebContactId}-->",
+                        "isKeyContactKorfina": "<!--#4DVAR AWebContactKeyContactKorfina{AWebContactId}-->"
+		            }
+		            <!--#4DIF (AWebContactId<size of array(AWebContactId)) -->
+		                ,
+		            <!--#4DENDIF -->
+		        <!--#4DENDLOOP-->   
+		    ]		
+			}
+}

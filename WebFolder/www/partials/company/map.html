@@ -1,0 +1,25 @@
+<div id="map">
+    <nav id="top-nav" class="navbar navbar-default navbar-fixed-top" bindonce="company">
+        <ol class="breadcrumb">
+            <li><a href="#/dashboard"><i class="icon-dashboard"></i>&nbsp;Dashboard</a></li>
+            <li><a href="#/companies"><i class="icon-gears"></i>&nbsp;Companies</a></li>
+            <li><a bo-href="'#/company/' + company.id" bo-html="'&nbsp;' + company.name"><i class="icon-gear"></i></a></li>
+            <li class="active"><i class="icon-envelope"></i>&nbsp;Map</li>
+        </ol>
+    </nav>
+    <div ng-show="mapHidden" class="loader" style="text-align: center;">
+        <img src="images/ajax-loader.gif" />
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span bindonce="company"><span bo-text="company.street"></span> - <span bo-text="company.city"></span></span>            
+        </div>
+        <div class="panel-body">
+            <google-map center="center" zoom="zoom" markers="markers" draggable="true" refresh="!mapHidden" style="height: 600px; display: block;"></google-map>        
+        </div>
+    </div>
+    
+    
+
+</div>
+

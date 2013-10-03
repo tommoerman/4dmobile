@@ -1,0 +1,39 @@
+{
+    "authenticated" : "<!--#4DVAR VWebAuthenticated-->",    
+    "data" : 
+	{
+        "company": {
+            "id": "<!--#4DVAR VWebCompanyId-->",
+            "name": "<!--#4DVAR VWebCompanyName-->"
+        },
+        "invoice": {
+		    "id": "<!--#4DVAR VWebInvoiceID-->",
+		    "number": "<!--#4DVAR VWebInvoiceNumber-->",		    
+		    "originator": "<!--#4DVAR VWebInvoiceCompany-->",
+		    "date" : "<!--#4DVAR VWebInvoiceDate-->",
+            "description" : "<!--#4DVAR VWebInvoiceDescription-->",
+		    "amount" : "<!--#4DVAR VWebInvoiceAmount-->",
+		    "amountVAT" : "<!--#4DVAR VWebInvoiceAmountVAT-->",
+		    "amountVATIncluded" : "<!--#4DVAR VWebInvoiceAmountVATIncluded-->",
+		    "openAmount" :"<!--#4DVAR VWebInvoiceOpenAmount-->",
+            "datePaid": "<!--#4DVAR VWebInvoiceDatePaid-->",
+            "paid": "<!--#4DVAR VWebInvoicePaid-->",
+            "lines":[
+       
+                    <!--#4DLOOP AWebInvoiceLineDescription-->
+                    {                        
+                        "description" : "<!--#4DVAR AWebInvoiceLineDescription{AWebInvoiceLineDescription}-->",
+                        "quantity": "<!--#4DVAR AWebInvoiceLineQuantity{AWebInvoiceLineDescription}-->",
+                        "discount": "<!--#4DVAR AWebInvoiceLineDiscount{AWebInvoiceLineDescription}-->",
+                        "amount": "<!--#4DVAR AWebInvoiceLineAmount{AWebInvoiceLineDescription}-->",
+                        "total": "<!--#4DVAR AWebInvoiceLineTotal{AWebInvoiceLineDescription}-->"
+                     }   
+                            <!--#4DIF (AWebInvoiceLineDescription<size of array(AWebInvoiceLineDescription)) -->                    
+                                    ,
+                                    <!--#4DENDIF -->
+                            <!--#4DENDLOOP-->  
+                   ]
+		    }
+    }
+}
+		
